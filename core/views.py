@@ -29,7 +29,7 @@ class OrderSummeryView(LoginRequiredMixin, View):
             }
             return render(self.request, 'pages/order_summery.html', context)
         except ObjectDoesNotExist:
-            messages.error(self.request, "You do not have an active order.")
+            messages.info(self.request, "You do not have an active order.")
             return redirect("/")
 
 

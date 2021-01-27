@@ -4,10 +4,11 @@
 <main style="height: 100%;">
 	<div class="container" >
         <div class="table-responsive" style="margin-top: 100px;">
+            <h2>Order Summary</h2>
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
+                  <th scope="col">Sl.</th>
                   <th scope="col">Title</th>
                   <th scope="col">Price</th>
                   <th scope="col">Quantity</th>
@@ -17,13 +18,27 @@
               <tbody>
                   {% for order_item in object.items.all %}
                 <tr>
-                  <th scope="row">1</th>
+                  <th scope="row">{{ forloop.counter }}</th>
                   <td>{{ order_item.item.title }}</td>
-                  <td>{{ order_item.item.price }}</td>
+                  <td>${{ order_item.item.price }}</td>
                   <td>{{ order_item.quantity}}</td>
-                  <td>???</td>
+                  <td>
+                      {% if order_item.item.discount_price %}
+                        ${{ order_item.get_item_total_discount_price }}
+                        <span class="badge badge-info"> saving ${{ order_item.get_amount_saved }}</span>
+                      {% else %}
+                        ${{ order_item.get_item_total_price }}
+                      {% endif %}   
+                  </td>
                 </tr>
                 {% endfor %}
+                <tr>
+                    <td colspan="4"><b>Order Total</b></td>
+                    <td><b>$ {{ object.get_total }}</b></td>
+                </tr>
+                <tr>
+                    <td colspan="5"><a class="btn btn-warning float-right" href="{% url 'core:checkout' %}">Proceed To Checkout</a></td>
+                </tr>
               </tbody>
             </table>
           </div>
