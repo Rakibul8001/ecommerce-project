@@ -60,7 +60,7 @@ def remove_from_cart(request, slug):
             order_item = OrderItem.objects.filter(
                 item=item, user=request.user, ordered=False)[0]
             order.items.remove(order_item)
-            messages.info(request, "This Item has removed from Your Cart")
+            messages.warning(request, "This Item has removed from Your Cart")
             return redirect("core:product", slug=slug)
         else:
             messages.info(request, "This Item was not in Your Cart")
