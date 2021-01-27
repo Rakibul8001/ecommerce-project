@@ -8,6 +8,7 @@ from django.utils import timezone
 
 class HomeView(ListView):
     model = Item
+    paginate_by = 1
     template_name = "pages/home-page.html"
 
 
