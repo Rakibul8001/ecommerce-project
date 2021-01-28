@@ -5,9 +5,9 @@ from django.utils.text import slugify
 
 # Create your models here.
 CATEGORY_CHOICES = (
-    ('S', 'Shirt'),
-    ('SW', 'Sport Wear'),
-    ('OW', 'Out Wear')
+    ('shirt', 'SHIRT'),
+    ('sportweare', 'SPORT WEARE'),
+    ('outweare', 'OUT WEARE')
 )
 LABEL_CHOICES = (
     ('P', 'primary'),
@@ -21,7 +21,7 @@ class Item(models.Model):
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
     description = models.TextField()
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=10)
     label = models.CharField(choices=LABEL_CHOICES, max_length=1)
     slug = models.SlugField(blank=True, null=True)
 

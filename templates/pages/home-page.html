@@ -225,27 +225,29 @@
 			<div class="collapse navbar-collapse" id="basicExampleNav">
 				<!-- Links -->
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active">
-						<a class="nav-link" href="#"
+					<li class="nav-item">
+						<a class="nav-link" href="/"
 							>All
 							<span class="sr-only">(current)</span>
 						</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Shirts</a>
+						<a class="nav-link" href="{% url 'core:item_category' 'shirt' %}">Shirts</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Sport wears</a>
+						<a class="nav-link" href="{% url 'core:item_category' 'sportweare' %}">Sport wears</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Outwears</a>
+						<a class="nav-link" href="{% url 'core:item_category' 'outweare' %}">Outwears</a>
 					</li>
 				</ul>
 				<!-- Links -->
 
-				<form class="form-inline">
+				<form class="form-inline" action="{% url 'core:item_search' %}" method="GET">
 					<div class="md-form my-0">
 						<input
+							name="query"
+							value="{{ request.GET.q }}"
 							class="form-control mr-sm-2"
 							type="text"
 							placeholder="Search"
@@ -257,7 +259,9 @@
 			<!-- Collapsible content -->
 		</nav>
 		<!--/.Navbar-->
-
+		{% if search_query %}
+		<h4>Search for: <span><b>{{ search_query }}</b></span></h4>
+		{% endif %}
 		<!--Section: Products v.3-->
 		<section class="text-center mb-4">
 			<!--Grid row-->
@@ -312,6 +316,8 @@
 					</div>
 					<!--Card-->
 				</div>
+				{% empty %}
+				<p>Not Available Item...</p>
 				<!--Grid column-->
 				{% endfor %}
 			</div>

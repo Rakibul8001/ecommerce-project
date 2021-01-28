@@ -11,13 +11,30 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class HomeView(ListView):
     model = Item
-    paginate_by = 10
+    paginate_by = 12
     template_name = "pages/home-page.html"
 
 
 class ItemDetailView(DetailView):
     model = Item
     template_name = "pages/product-page.html"
+
+# Item view by Category
+
+
+class ItemCategory(ListView):
+    model = Item
+    template_name = "pages/home-page.html"
+    paginate_by = 12
+
+    def get_queryset(self):
+        self.category = self.kwargs['category']
+        return Item.objects.filter(category=self.category)
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemCategory, self).get_context_data(**kwargs)
+        context['item_category'] = self.category
+        return context
 
 
 class OrderSummeryView(LoginRequiredMixin, View):
@@ -87,3 +104,24 @@ def remove_from_cart(request, slug):
     else:
         messages.info(request, "You do no have an active order")
         return redirect("core:product", slug=slug)
+
+# Item search
+
+
+class ItemSearch(ListView):
+    model = Item
+    template_name = "pages/home-page.html"
+    paginate_by = 12
+
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+        if query:
+            object_list = self.model.objects.filter(title__icontains=query)
+        else:
+            object_list = self.model.objects.none()
+        return object_list
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemSearch, self).get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('query')
+        return context
