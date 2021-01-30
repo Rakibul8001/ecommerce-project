@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, View
 from .models import Item, OrderItem, Order
+from .forms import CheckoutForm
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -50,8 +51,23 @@ class OrderSummeryView(LoginRequiredMixin, View):
             return redirect("/")
 
 
-def checkout(request):
-    return render(request, 'pages/checkout-page.html')
+class CheckoutView(View):
+    def get(self, *args, **kwargs):
+        form = CheckoutForm()
+        context = {
+            'form': form
+        }
+        return render(self.request, 'pages/checkout-page.html', context)
+
+    def post(self, *args, **kwargs):
+        form = CheckoutForm(self.request.POST or None)
+        print(self.request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            print("This form is valid")
+            return redirect('core:checkout')
+        messages.warning(self.request, "Failed Checkout")
+        return redirect('core:checkout')
 
 
 @login_required
