@@ -72,12 +72,18 @@
               <hr>
 
               <div class="custom-control custom-checkbox">
-                <input {% if form.billing_address.value %}checked{% endif %} name="billing_address" type="checkbox" class="custom-control-input" id="same-address">
-                <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
+                <input {% if form.same_shipping_address.value %}checked{% endif %} name="same_shipping_address" 
+                  type="checkbox" class="custom-control-input" id="same-address">
+                <label class="custom-control-label" for="same-address">
+                  Shipping address is the same as my billing address
+                </label>
               </div>
               <div class="custom-control custom-checkbox">
-                <input {% if form.save_info.value %}checked{% endif %} name="save_info" type="checkbox" class="custom-control-input" id="save-info">
-                <label class="custom-control-label" for="save-info">Save this information for next time</label>
+                <input {% if form.save_info.value %}checked{% endif %} name="save_info" 
+                  type="checkbox" class="custom-control-input" id="save-info">
+                <label class="custom-control-label" for="save-info">
+                  Save this information for next time
+                </label>
               </div>
 
               <hr>
@@ -85,7 +91,8 @@
               <div class="d-block my-3">
                 {% for value, name in form.fields.payment_option.choices %}
                 <div class="custom-control custom-radio">
-                  <input id="{{ name }}" name="payment_option" value="{{ value }}" type="radio" class="custom-control-input" required>
+                  <input id="{{ name }}" name="payment_option" value="{{ value }}" type="radio" 
+                    class="custom-control-input" required>
                   <label class="custom-control-label" for="{{ name }}">{{ name }}</label>
                 </div>
                 {% endfor %}
@@ -151,7 +158,8 @@
           <!-- Promo code -->
           <form class="card p-2">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Promo code" aria-label="Recipient's username" aria-describedby="basic-addon2">
+              <input type="text" class="form-control" placeholder="Promo code" 
+                aria-label="Recipient's username" aria-describedby="basic-addon2">
               <div class="input-group-append">
                 <button class="btn btn-secondary btn-md waves-effect m-0" type="button">Redeem</button>
               </div>

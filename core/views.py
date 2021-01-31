@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, View
-from .models import Item, OrderItem, Order
+from .models import Item, OrderItem, Order, BillingAddress
 from .forms import CheckoutForm
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
@@ -61,13 +61,41 @@ class CheckoutView(View):
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
-        print(self.request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-            print("This form is valid")
+        try:
+            order = Order.objects.get(user=self.request.user, ordered=False)
+            if form.is_valid():
+                street_address = form.cleaned_data.get('street_address')
+                apartment_address = form.cleaned_data.get('apartment_address')
+                country = form.cleaned_data.get('country')
+                zip_code = form.cleaned_data.get('zip_code')
+                # TODO: add functionality
+                # same_shipping_address = form.cleaned_data.get(
+                #     'same_shipping_address')
+                # save_info = form.cleaned_data.get('save_info')
+                payment_option = form.cleaned_data.get('payment_option')
+                billing_address = BillingAddress(
+                    user=self.request.user,
+                    street_address=street_address,
+                    apartment_address=apartment_address,
+                    country=country,
+                    zip_code=zip_code
+                )
+                billing_address.save()
+                order.billing_address = billing_address
+                order.save()
+                # TODO: redirect to the selected payment options
+                return redirect('core:checkout')
+            messages.warning(self.request, "Failed Checkout")
             return redirect('core:checkout')
-        messages.warning(self.request, "Failed Checkout")
-        return redirect('core:checkout')
+
+        except ObjectDoesNotExist:
+            messages.info(self.request, "You do not have an active order.")
+            return redirect("core:order-summery")
+
+
+class PaymentView(View):
+    def get(self, *args, **kwargs):
+        return render(self.request, 'pages/payment.html')
 
 
 @login_required
